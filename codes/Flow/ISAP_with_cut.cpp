@@ -1,4 +1,4 @@
-﻿template<typename T>
+template<typename T>
 struct ISAP{
 	static const int MAXN=105;
 	static const T INF=INT_MAX;

@@ -1,68 +1,89 @@
-template<typename TP>
-struct MCMF{
-	static const int MAXN=440;
-	static const TP INF=999999999;
-	struct edge{
-		int v,pre;
-		TP r,cost;
-		edge(int v,int pre,TP r,TP cost):v(v),pre(pre),r(r),cost(cost){}
+template<class Cap_t, class Cost_t>
+class MCMF {
+public:
+	struct Edge {
+		int from;
+		int to;
+		Cap_t cap;
+		Cost_t cost;
+		Edge(int u, int v, Cap_t _cap, Cost_t _cost) : from(u), to(v), cap(_cap), cost(_cost) {}
 	};
-	int n,S,T;
-	TP dis[MAXN],PIS,ans;
-	bool vis[MAXN];
-	vector<edge> e;
-	int g[MAXN];
-	void init(int _n){
-		memset(g,-1,sizeof(int)*((n=_n)+1));
-		e.clear();
+
+	static constexpr Cap_t EPS = static_cast<Cap_t>(1e-9);
+
+	int n;
+	vector<Edge> edges;
+	vector<vector<int>> g;
+	vector<Cost_t> d;
+	vector<bool> in_queue;
+	vector<int> previous_edge;
+
+	MCMF() {}
+	MCMF(int _n) : n(_n+1), g(_n+1), d(_n+1), in_queue(_n+1), previous_edge(_n+1) {}
+
+	void add_edge(int u, int v, Cap_t cap, Cost_t cost) {
+		assert(0 <= u && u < n);
+		assert(0 <= v && v < n);
+		g[u].push_back(edges.size());
+		edges.emplace_back(u, v, cap, cost);
+		g[v].push_back(edges.size());
+		edges.emplace_back(v, u, 0, -cost);
 	}
-	void add_edge(int u,int v,TP r,TP cost,bool directed=false){
-		e.push_back(edge(v,g[u],r,cost));
-		g[u]=e.size()-1;
-		e.push_back(
-		edge(u,g[v],directed?0:r,-cost));
-		g[v]=e.size()-1;
-	}
-	TP augment(int u,TP CF){
-		if(u==T||!CF)return ans+=PIS*CF,CF;
-		vis[u]=1;
-		TP r=CF,d;
-		for(int i=g[u];~i;i=e[i].pre){
-			if(e[i].r&&!e[i].cost&&!vis[e[i].v]){
-				d=augment(e[i].v,min(r,e[i].r));
-				e[i].r-=d;
-				e[i^1].r+=d;
-				if(!(r-=d))break;
+
+	bool spfa(int s, int t) {
+		bool found = false;
+		fill(d.begin(), d.end(), numeric_limits<Cost_t>::max());
+		d[s] = 0;
+		in_queue[s] = true;
+		queue<int> que;
+		que.push(s);
+		while(!que.empty()) {
+			int u = que.front();
+			que.pop();
+			if(u == t) {
+				found = true;
 			}
-		}
-		return CF-r;
-	}
-	bool modlabel(){
-		for(int u=0;u<=n;++u)dis[u]=INF;
-		static deque<int>q;
-		dis[T]=0,q.push_back(T);
-		while(q.size()){
-			int u=q.front();q.pop_front();
-			TP dt;
-			for(int i=g[u];~i;i=e[i].pre){
-				if(e[i^1].r&&(dt=dis[u]-e[i].cost)<dis[e[i].v]){
-					if((dis[e[i].v]=dt)<=dis[q.size()?q.front():S]){
-						q.push_front(e[i].v);
-					}else q.push_back(e[i].v);
+			in_queue[u] = false;
+			for(auto& id : g[u]) {
+				const Edge& e = edges[id];
+				if(e.cap > EPS && d[u] + e.cost < d[e.to]) {
+					d[e.to] = d[u] + e.cost;
+					previous_edge[e.to] = id;
+					if(!in_queue[e.to]) {
+						que.push(e.to);
+						in_queue[e.to] = true;
+					}
 				}
 			}
 		}
-		for(int u=0;u<=n;++u)
-			for(int i=g[u];~i;i=e[i].pre)
-				e[i].cost+=dis[e[i].v]-dis[u];
-		return PIS+=dis[S], dis[S]<INF;
+		return found;
 	}
-	TP mincost(int s,int t){
-		S=s,T=t;
-		PIS=ans=0;
-		while(modlabel()){
-			do memset(vis,0,sizeof(bool)*(n+1));
-			while(augment(S,INF));
-		}return ans;
+
+	pair<Cap_t, Cost_t> flow(int s, int t, Cap_t f = numeric_limits<Cap_t>::max()) {
+		assert(0 <= s && s < n);
+		assert(0 <= t && t < n);
+		Cap_t cap = 0;
+		Cost_t cost = 0;
+		while(f > 0 && spfa(s, t)) {
+			Cap_t send = f;
+			int u = t;
+			while(u != s) {
+				const Edge& e = edges[previous_edge[u]];
+				send = min(send, e.cap);
+				u = e.from;
+			}
+			u = t;
+			while(u != s) {
+				Edge& e = edges[previous_edge[u]];
+				e.cap -= send;
+				Edge& b = edges[previous_edge[u] ^ 1];
+				b.cap += send;
+				u = e.from;
+			}
+			cap += send;
+			f -= send;
+			cost += send * d[t];
+		}
+		return make_pair(cap, cost);
 	}
 };
