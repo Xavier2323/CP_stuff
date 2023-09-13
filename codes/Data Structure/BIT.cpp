@@ -1,36 +1,27 @@
-//迭代
+#define lowbit(x) x & -x
 
-int n;
-int bit[100000 + 9];
-void modify(int i, int x) {
-    while (i <= n) {
-        bit[i] += x;
-        i += i & -i;
-    }
+void modify(vector<int> &bit, int idx, int val) {
+	for(int i = idx; i <= bit.size(); i+= lowbit(i)) bit[i] += val;
 }
-int query(int i) {
-    int res = 0;
-    while (i) {
-        res += bit[i];
-        i -= i & -i;
-    }
-    return res;
+ 
+int query(vector<int> &bit, int idx) {
+	int ans = 0;
+	for(int i = idx; i > 0; i-= lowbit(i)) ans += bit[i];
+	return ans;
 }
-
-//bit上二分搜
-int findk(int k) {
-    int id = 0, res = 0;
-    int mx = __lg(n) + 1;
-    for (int i = mx; i >= 0; i--) {
-        if ((id | (1<<i)) > n) continue;
-        if (res + b[id|(1<<i)] < k) { 
-            id = (id | (1<<i));
-            res += b[id];
-        }
-    }
-    return id + 1;
+ 
+int findK(vector<int> &bit, int k) {
+	int idx = 0, res = 0;
+	int mx = __lg(bit.size()) + 1;
+	for(int i = mx; i >= 0; i--) {
+		if((idx | (1<<i)) > bit.size()) continue;
+		if(res + bit[idx | (1<<i)] < k) {
+			idx = (idx | (1<<i)); 
+			res += bit[idx];
+		}
+	}
+	return idx + 1;
 }
-
 //O(n)建bit
 for (int i = 1; i <= n; ++i) {
     bit[i] += a[i];
