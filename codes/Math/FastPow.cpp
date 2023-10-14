@@ -1,15 +1,9 @@
-constexpr long long Pow(long long x, long long n, int m) {
-	if(m == 1) return 0;
-	unsigned int _m = (unsigned int)(m);
-	unsigned long long r = 1;
-	x %= m;
-	if(x < 0) x += m;
-	unsigned long long y = x;
-	while(n) {
-		if(n & 1) r = (r * y) % _m;
-		y = (y * y) % _m;
-		n >>= 1;
-	}
-	return r;
+ll modexp(ll x, ll k, ll p) {
+    ll ans = 1;
+    for(int i = 1; i <= k; i <<= 1) {
+        if(i & k) ans *= x, ans %= p;
+        x *= x, x %= p;
+    }
+    return ans;
 }
 
