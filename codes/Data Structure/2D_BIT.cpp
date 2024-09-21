@@ -9,7 +9,7 @@ class BIT {
 public:
     void init(int _n) {
         n = _n;
-        bit.resize(n);
+        bit.resize(n + 1);
         for(auto &b : bit) b = 0;
     }
     int query(int x) const {
@@ -31,7 +31,7 @@ class BIT2D {
 public:
     void init(int _m, int _n) {
         m = _m;
-        bit1D.resize(m);
+        bit1D.resize(m + 1);
         for(auto &b : bit1D) b.init(_n);
     }
     int query(int x, int y) const {

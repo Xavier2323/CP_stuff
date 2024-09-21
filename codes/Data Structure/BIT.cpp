@@ -10,6 +10,7 @@ int query(vector<int> &bit, int idx) {
 	return ans;
 }
  
+// the first i s.t. a[1]+...+a[i] >= k
 int findK(vector<int> &bit, int k) {
 	int idx = 0, res = 0;
 	int mx = __lg(bit.size()) + 1;
