@@ -2,6 +2,10 @@ using ll = long long;
 const int N = 2e5 + 5;
 #define lc(x) (x << 1)
 #define rc(x) (x << 1 | 1)
+
+// [1,n]
+// tag[i] represents the modifications to be applied to the children,
+// while seg[i] has already been modified.
 ll seg[N << 2], tag[N << 2];
 int n;
 
