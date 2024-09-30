@@ -27,8 +27,6 @@ for(int i=0;i<n;i++) {
 }
 cout<<dp.size();
 //LCS問題
-#include<bits/stdc++.h>
-using namespace std;
 signed main() {
     string a,b;
     cin>>a>>b;

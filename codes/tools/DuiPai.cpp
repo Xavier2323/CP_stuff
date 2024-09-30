@@ -1,5 +1,3 @@
-#include<bits/stdc++.h>
-using namespace std;
 int main(){
 	string sol,bf,make;
 	cout<<"Your solution file name :";

@@ -1,4 +1,3 @@
-#include<bits/stdc++.h>
 #define lim 1000000007
 #define ll long long
 #define endl "\n"

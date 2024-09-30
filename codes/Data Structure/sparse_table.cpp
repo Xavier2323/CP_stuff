@@ -1,6 +1,4 @@
 //CSES Static Range Minimum Queries
-#include<bits/stdc++.h>
-using namespace std;
 #define inf 1e9
 vector<vector<int>> st;
 

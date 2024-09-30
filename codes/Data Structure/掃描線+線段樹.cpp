@@ -1,11 +1,9 @@
 //CSES Area of Rectangle
-#include <bits/stdc++.h>
 #define pb push_back
 #define int long long
 #define mid ((l + r) >> 1)
 #define lc (p << 1)
 #define rc ((p << 1) | 1)
-using namespace std;
 struct ooo{
     int x, l, r, v;
 };
@@ -67,7 +65,6 @@ signed main(){
         sum += 2 * inf + 1 - cnt[1];
     }
     cout << sum << "\n";
-    return 0;
 }
 //長方形面積
 long long AreaOfRectangles(vector<tuple<int,int,int,int>>v){
@@ -105,10 +102,8 @@ long long AreaOfRectangles(vector<tuple<int,int,int,int>>v){
 }
 
 // CSES Intersection Points
-#include <bits/stdc++.h>
 #define int long long
 #define pb push_back
-using namespace std;
 struct line{
     int p, l, r;
 };
@@ -151,5 +146,4 @@ signed main(){
     sort(Q.begin(), Q.end(), cmp);
     sort(A.begin(), A.end(), cmp);
     cout << run() << "\n";
-    return 0;
 }

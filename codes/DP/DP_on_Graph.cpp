@@ -47,9 +47,6 @@ int solve(int n) {
   return max(dfs(1, 0), dfs(1, 1));
 }
 //Traveling Salesman // AtCoder
-#include<bits/stdc++.h>
-using namespace std;
-
 const int INF = 1e9;
 int cost(vector<tuple<int,int,int>> &point, int from, int to) {
     auto [x,y,z] = point[from];
